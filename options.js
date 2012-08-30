@@ -1,4 +1,10 @@
-﻿function getElem(id) {
+﻿
+var load = chrome.extension.getBackgroundPage().load;
+var save = chrome.extension.getBackgroundPage().save;
+
+
+
+function getElem(id) {
 	return document.getElementById(id);
 }
 function enableSaveButton() {
@@ -8,17 +14,37 @@ function enableSaveButton() {
 }
 function loadSavedSettings() {
 
-	var urlList = getElem('url-list')
-		, enabledUrls = JSON.parse(localStorage.getItem("enabledUrls"));
-
-	console.log(enabledUrls);
-	urlList.innerHTML = enabledUrls.join("\n");
+	loadEnabledUrls();
 
 }
 function saveSettings() {
-	var urlList = getElem('url-list')
-		, enabledUrls = urlList.value.split(/\s+/);
+	saveEnabledUrls();
+
+}
+function loadEnabledUrls() {
 	
+	var urlList = getElem('url-list')
+		, enabledUrls = load('enabledUrls')
+		, key
+		, str = "";
+
+	for (key in enabledUrls) {
+		if (enabledUrls.hasOwnProperty(key)) {
+			str += key;
+		}
+	}
+	urlList.innerHTML = str; 
+
+}
+function saveEnabledUrls() {
+	var urlList = getElem('url-list')
+		, urlArray = urlList.value.split(/\s+/);
+
+
+	
+
+	
+
 	console.log(enabledUrls);
 	localStorage.setItem("enabledUrls",JSON.stringify(enabledUrls));
 

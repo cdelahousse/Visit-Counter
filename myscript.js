@@ -2,6 +2,7 @@
 $(document).ready(function () {
 	'use strict';
 
+
 	function buildUI(numVisits) {
 		var frag = document.createDocumentFragment()
 		,   div = document.createElement('div')
@@ -60,49 +61,9 @@ $(document).ready(function () {
 
 	function init(response) {
 
-		var settings = response;
-
-		chrome.storage.local.get(function (r) {
-			var date = new Date(),
-			c = {
-				day : date.getDay(),
-				month : date.getMonth(),
-				year : date.getFullYear(),
-				now: Date.now()
-			};
-
-		//console.log(r);
-		//console.log(r.visits === undefined ); 
-		//console.log(	r.date === undefined );
-		//console.log(		c.day		!== parseInt(r.date.day,10));
-		//console.log(		c.month	!== parseInt(r.date.month,10) );
-		//console.log(		c.year		!== parseInt(r.date.year,10) );
-
-
-			//Check if new day
-			if (r.visits === undefined 
-				|| r.date === undefined
-				|| c.day		!== r.date.day
-				|| c.month	!== r.date.month
-				|| c.year		!== r.date.year ) {
-
-				console.log("New day");
-
-				//Restart for today
-				r.visits = 0;
-
-			//Ignore if we've recently visited the site
-			} else if (c.now - r.date.now < settings.timeGap) {
-				chrome.storage.local.set({
-					"visits" : r.visits,
-					"date" : c.date
-				});
-				return;
-			} 
-
-			var numVisits = r.visits;
-			numVisits++;
-
+		var settings = response.settings
+			, numVisits = response.numVisits;
+		console.log(numVisits);
 
 			var div = buildUI(numVisits);
 
@@ -121,11 +82,6 @@ $(document).ready(function () {
 			}, settings.fadeOutTime );
 			
 
-			chrome.storage.local.set({
-				"visits" : numVisits,
-				"date" : c
-			});
-
 			function eventDelegation(e) {
 
 				switch (e.target.id) {
@@ -134,24 +90,25 @@ $(document).ready(function () {
 						chrome.storage.local.clear();
 						break;
 					case 'exit':
-						removeElem(div,fadeTimeOut);
+						removeElem(div,settings.fadeTimeOut);
 						break;
 					default:
 						break;
 				}
 			}
-		});
 	}
 
 
-	//Run if enabled
-	chrome.extension.sendMessage({msg : "isEnabled"},function (response) {
-		if (response) {
-			chrome.extension.sendMessage({msg : "getSettings"},init);
-		}
-		//Else, does not run
-	});
+	(function() {
+		var sndMsg = chrome.extension.sendMessage;
+		//Run if enabled
+		sndMsg({msg : "isEnabled"},function (response) {
+			console.log(response ,"Enabled!");
+			if (response) {
+				sndMsg({msg : "updateEnabledUrlState"}, init);
+			}
+			else { return; }
+		});
+	}());
 
 });
-
-
