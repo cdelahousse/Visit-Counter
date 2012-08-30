@@ -1,0 +1,165 @@
+﻿<html>
+  <head>
+    <title>Visit Counter Options</title>
+    <style type="text/css" media="screen">
+      body {
+        font: 14px "DejaVu Sans", "Arial", sans-serif;
+        color: #303942;
+        width: 680px;
+        margin: 0 auto;
+      }
+      a, a:visited { color: #15c; }
+      a:active { color: #052577; }
+      div#wrapper { width: 500px; }
+      header {
+        font-size: 18px;
+        font-weight: normal;
+        border-bottom: 1px solid #eee;
+        padding: 20px 0 15px 0;
+        width: 100%;
+      }
+      button {
+        -webkit-user-select: none;
+        -webkit-appearance: none;
+        background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        border-radius: 2px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.75);
+        color: #444;
+        font: inherit;
+        text-shadow: 0 1px 0 #f0f0f0;
+        height: 24px;
+        font-size: 12px;
+        padding: 0 10px;
+      }
+      button:hover {
+        background-image: -webkit-linear-gradient(#f0f0f0, #f0f0f0 38%, #e0e0e0);
+        border-color: rgba(0, 0, 0, 0.3);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+        color: black;
+      }
+      button:active {
+        background-image: -webkit-linear-gradient(#e7e7e7, #e7e7e7 38%, #d7d7d7);
+        box-shadow: none;
+        text-shadow: none;
+      }
+      button[disabled], button[disabled]:hover, button[disabled]:active {
+        background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.75);
+        text-shadow: 0 1px 0 #f0f0f0;
+        color: #888;
+      }
+      input[type="checkbox"] {
+        -webkit-user-select: none;
+      }
+      label:hover {
+        color: black;
+      }
+      pre, code, .code {
+        font-family: Consolas, "Liberation Mono", Courier, monospace;
+      }
+      pre {
+        margin: 5px;
+        border-left: 1px solid #eee;
+        padding-left: 5px;
+
+      }
+      input, textarea {
+        box-sizing: border-box;
+      }
+      textarea {
+        /* Horizontal resizing is pretty screwy-looking. */
+        resize: vertical;
+        width:100%;
+      }
+      table {
+        width: 100%;
+        font-size: 14px;
+        position: relative;
+        border-spacing: 0 23px;
+      }
+      .caption {
+        margin-right: 10px;
+        min-width: 130px;
+      }
+      td { padding: 0; }
+      #status {
+        margin-left: 10px;
+        font-size: 80%;
+      }
+      #buttonsPanel { width: 100%; }
+      #buttonContainer { float: right; }
+      #buttonContainer button:last-child {
+        margin-right: 0;
+      }
+      .help {
+        position: absolute;
+        right: -320px;
+        width: 300px;
+        top: 0;
+        margin-left: 20px;
+      }
+      .example {
+        font-size: 12px;
+        line-height: 16px;
+        color: #979ca0;
+      }
+      input:read-only {
+        background-color: #eee;
+        color: #666;
+        pointer-events: none;
+        -webkit-user-select: none;
+      }
+      input[type="text"], textarea {
+        border: 1px solid #bfbfbf;
+        border-radius: 2px;
+        color: #444;
+        font: inherit;
+        padding: 3px;
+      }
+      button:focus, input[type="text"]:focus, textarea:focus {
+        -webkit-transition: border-color 200ms;
+        border-color: #4d90fe;
+        outline: none;
+      }
+      /* Boolean options have a tighter form representation than text options. */
+      td.booleanOption { font-size: 12px; }
+
+			textarea#url-list {
+				min-height: 100px;
+			}
+    </style>
+
+  <script type="text/javascript" src="/options.js"></script>
+
+  </head>
+
+  <body>
+    <div id="wrapper">
+      <header>Visit Counter options</header>
+      <table>
+        <tr>
+          <td>
+             Activate on these URLs: <br/>
+              <textarea id="url-list"></textarea>
+							<aside class="help example">
+								<p>Enter one URL per line. Use * as wildcards.</p>
+								<p> e.g. http*://*.facebook.com/*  will match every permutation of
+									facebook.com's URL</p>
+							</aside >
+          </td>
+        </tr>
+			</table>
+
+      <div id="buttonsPanel">
+        <div id="buttonContainer">
+          <button id="save-options" disabled="true">Save Options</button>
+        </div>
+      </div>
+
+      <br/>
+
+    </div>
+  </body>
+</html>

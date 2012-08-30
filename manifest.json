@@ -3,12 +3,19 @@
   "version": "1.0",
   "manifest_version": 2,
   "description": "Counts the number of times you've visited that a website throughout the day",
+  "options_page": "options.html",
   "permissions" :  [
-		"storage" //May remove, use localStorage instead, doesn't seem to need permissiosn
+		"storage", //May remove, use localStorage instead, doesn't seem to need permissiosn
+		"<all_urls>"
 	],
+  "background": {
+    "scripts": [
+      "background.js"
+      ]
+	},
 	"content_scripts": [
     {
-      "matches": ["https://www.facebook.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["jquery.js", "myscript.js"],
       "run_at" : "document_start"
     }

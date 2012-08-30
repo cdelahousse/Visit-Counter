@@ -2,11 +2,6 @@
 $(document).ready(function () {
 	'use strict';
 
-	var globals = {};
-	//Constants
-	globals.fadeOutTime = 5*1000;
-	globals.timeGap = 60*1000; 
-
 	function buildUI(numVisits) {
 		var frag = document.createDocumentFragment()
 		,   div = document.createElement('div')
@@ -63,7 +58,9 @@ $(document).ready(function () {
 		}
 	}
 
-	(function init() {
+	function init(response) {
+
+		var settings = response;
 
 		chrome.storage.local.get(function (r) {
 			var date = new Date(),
@@ -95,7 +92,7 @@ $(document).ready(function () {
 				r.visits = 0;
 
 			//Ignore if we've recently visited the site
-			} else if (c.now - r.date.now < globals.timeGap) {
+			} else if (c.now - r.date.now < settings.timeGap) {
 				chrome.storage.local.set({
 					"visits" : r.visits,
 					"date" : c.date
@@ -121,7 +118,7 @@ $(document).ready(function () {
 
 			var fadeTimeOut = setTimeout(function() {
 				$(div).fadeOut("slow");
-			}, globals.fadeOutTime );
+			}, settings.fadeOutTime );
 			
 
 			chrome.storage.local.set({
@@ -144,7 +141,16 @@ $(document).ready(function () {
 				}
 			}
 		});
-	}());
+	}
+
+
+	//Run if enabled
+	chrome.extension.sendMessage({msg : "isEnabled"},function (response) {
+		if (response) {
+			chrome.extension.sendMessage({msg : "getSettings"},init);
+		}
+		//Else, does not run
+	});
 
 });
 
