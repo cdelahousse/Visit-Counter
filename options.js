@@ -1,16 +1,23 @@
 ﻿
 var load = chrome.extension.getBackgroundPage().load;
 var save = chrome.extension.getBackgroundPage().save;
+var CurrentDate = chrome.extension.getBackgroundPage().CurrentDate;
 
 
 
 function getElem(id) {
 	return document.getElementById(id);
 }
-function enableSaveButton() {
+function enableSaveButton(bool) {
 	var btn = getElem("save-options");
-	console.log(btn);
-	btn.removeAttribute("disabled");
+
+	if (bool === undefined) {
+		bool = false;
+	}
+	else {
+		bool = !bool;
+	}
+	btn.disabled = bool;
 }
 function loadSavedSettings() {
 
@@ -20,33 +27,50 @@ function loadSavedSettings() {
 function saveSettings() {
 	saveEnabledUrls();
 
+	enableSaveButton(false);
+	loadSavedSettings();
+
 }
 function loadEnabledUrls() {
 	
 	var urlList = getElem('url-list')
 		, enabledUrls = load('enabledUrls')
 		, key
-		, str = "";
+		, a = [];
+
 
 	for (key in enabledUrls) {
 		if (enabledUrls.hasOwnProperty(key)) {
-			str += key;
+			a.push(key);
 		}
 	}
-	urlList.innerHTML = str; 
+	urlList.value = a.join('\n'); 
 
 }
 function saveEnabledUrls() {
 	var urlList = getElem('url-list')
-		, urlArray = urlList.value.split(/\s+/);
+		, urlStrings = urlList.value.trim().split(/\s+/)
+		, enabledUrls = load('enabledUrls')
+		, newEnabledUrls = {};
 
+	console.log(urlStrings);
 
-	
+	//Copy everything over to new object and ignore the rest
+	urlStrings.forEach(function(str) {
 
-	
+		if (enabledUrls[str]) {
+			newEnabledUrls[str] = enabledUrls[str];
+		}
+		else {
+			var curDate = new CurrentDate();
+			newEnabledUrls[str] = {
+				numVisits : 0,
+				dateVisited : new CurrentDate()
+			};
+		}
+	});
 
-	console.log(enabledUrls);
-	localStorage.setItem("enabledUrls",JSON.stringify(enabledUrls));
+	save('enabledUrls', newEnabledUrls);
 
 }
 function onDomContentLoaded(){
@@ -54,8 +78,9 @@ function onDomContentLoaded(){
 	loadSavedSettings();
 	getElem('url-list').addEventListener("change", enableSaveButton,false); //HACK
 	getElem('url-list').addEventListener("keyup", enableSaveButton ,false); //HACK
-
 	getElem('save-options').addEventListener("click",saveSettings);
+
+	enableSaveButton(false);
 
 }
 
