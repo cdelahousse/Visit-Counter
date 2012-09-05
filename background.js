@@ -19,8 +19,8 @@ function save(key,obj) {
 	globals[key] = obj;
 }
 
-function CurrentDate() {
-	var date = new Date();
+function CurrentDate(d) {
+	var date = d || new Date();
 	return {
 			day : date.getDate()
 		, month : date.getMonth()

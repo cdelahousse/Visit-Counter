@@ -65,7 +65,8 @@ function saveEnabledUrls() {
 			var curDate = new CurrentDate();
 			newEnabledUrls[str] = {
 				numVisits : 0,
-				dateVisited : new CurrentDate()
+				//Set earliest date possible
+				dateVisited : new CurrentDate(new Date(0))
 			};
 		}
 	});

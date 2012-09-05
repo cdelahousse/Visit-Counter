@@ -33,14 +33,14 @@ $(document).ready(function () {
 		nav.style.right= "2px";
 
 		var clearButton = document.createElement('a');
-		clearButton.href = "#";
+		clearButton.href = "#clear";
 		clearButton.innerHTML = "Clear ";
 		clearButton.id = "clear";
 		nav.appendChild(clearButton);
 	
 
 		var exitButton = document.createElement('a');
-		exitButton.href = '#';
+		exitButton.href = '#exit';
 		exitButton.innerHTML = "[X]";
 		exitButton.id = "exit";
 		nav.appendChild(exitButton);
