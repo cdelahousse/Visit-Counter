@@ -1,7 +1,6 @@
 ﻿
 
 Fix 'clear data'
-modify 'saveState()'. Should abstract away stuff
 convert background page to event page
 remove jQuery
 add On doucment loaded call to content_script

@@ -2,8 +2,7 @@
 var bg = chrome.extension.getBackgroundPage()
 	, globals = bg.globals
 	, load = bg.load
-	, save = bg.save
-	, DateObj = bg.DateObj;
+	, save = bg.save;
 
 
 
@@ -62,12 +61,8 @@ function saveEnabledUrls() {
 			newEnabledUrls[str] = globals.enabledUrls[str];
 		}
 		else {
-			var curDate = new DateObj();
-			newEnabledUrls[str] = {
-				numVisits : 0,
-				//Set earliest date possible
-				dateVisited : new DateObj(new Date(0))
-			};
+			var curDate = new bg.DateObj();
+			newEnabledUrls[str] = new bg.EnabledUrlObj(str);
 		}
 	});
 

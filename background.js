@@ -1,13 +1,11 @@
 ﻿
 var globals = {};
 
-////Globals
-//var settings;
-//var enabledUrls;
-
 //Get from localStorage
 //Has side effects
 function load(key) {
+
+	console.log('Loading ' + key + ' to globals["' + key + '"]');
 	globals[key] = JSON.parse(localStorage.getItem(key));
 }
 
@@ -38,6 +36,7 @@ function loadAllState() {
 	}
 }
 
+//Custom Date object contructor
 function DateObj(d) {
 	var date = d || new Date();
 	return {
@@ -48,28 +47,18 @@ function DateObj(d) {
 	};
 }
 
-//localStorage.clear(); //XXX
-if (localStorage.length > 0) {
-	console.log("Loading from localStorage");
-	
-	loadAllState();
+//EnabledUrlObj constructor
+//@params:
+//	string key;
+//	bool useCurrentDate : use this current date or not
+function EnabledUrlObj (key,useCurrentDate) {
 
-} else {
-
-	console.log("Setting to defaults");
-	var defaultSettings = {
-		fadeOutTime :	 5 * 1000 ,
-		timeGap :			 60*1000
+	//If false, use earliest date possible
+	var d = useCurrentDate ? undefined : new Date(0);
+	return {
+		numVisits : 0,
+		dateVisited : new DateObj(d)
 	};
-
-	var defaultEnabledUrls = {
-		"http*://*.facebook.com/*" : {
-			numVisits : 0,
-			dateVisited : new DateObj(new Date(0))
-		}
-	};
-
-	saveAllState();
 }
 
 
@@ -108,17 +97,6 @@ function getEnabledUrlKey(url) {
 
 	return null;
 }
-
-
-function incrementCounter(url) {
-	var key = getEnabledUrlKey(url)
-		, data = getEnabledUrl(key);
-
-	data.numVisits++;
-
-}
-
-
 
 function updateEnabledUrlState(key) {
 	var currentEnabledUrl = getEnabledUrl(key);
@@ -188,3 +166,28 @@ chrome.extension.onMessage.addListener(
 			
 });
 
+
+
+//Run program
+
+if (localStorage.length > 0) {
+	console.log("Loading from localStorage");
+	
+	loadAllState();
+
+} else {
+
+	console.log("Setting to defaults");
+	var defaultSettings = {
+		fadeOutTime :	 5 * 1000 ,
+		timeGap :			 60*1000
+	};
+
+	var defaultEnabledUrls = {
+			"http*://*.facebook.com/*" : new EnabledUrlObj("http*://*.facebook.com/*",false)
+		, "http*://*.google.*" : new EnabledUrlObj("http*://*.google.*",false)
+	};
+
+	save ("settings", defaultSettings);
+	save ("enabledUrls", defaultEnabledUrls);
+}
