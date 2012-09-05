@@ -1,16 +1,21 @@
 ﻿
+var globals = {};
 
-var settings;
-var enabledUrls;
+////Globals
+//var settings;
+//var enabledUrls;
 
 //Get from localStorage
+//Has side effects
 function load(key) {
-	return JSON.parse(localStorage.getItem(key));
+	globals[key] = JSON.parse(localStorage.getItem(key));
 }
 
 //Save to local storage
+//Has side effects
 function save(key,obj) {
 	localStorage.setItem(key,JSON.stringify(obj));
+	globals[key] = obj;
 }
 
 function CurrentDate() {
@@ -27,8 +32,11 @@ function CurrentDate() {
 if (localStorage.length > 0) {
 	console.log("Loading from localStorage");
 	
-	settings = load("settings");
-	enabledUrls = load("enabledUrls");
+	load("settings");
+	load("enabledUrls");
+
+	//settings = load("settings");
+	//enabledUrls = load("enabledUrls");
 } else {
 
 	console.log("Setting to defaults");
@@ -44,10 +52,10 @@ if (localStorage.length > 0) {
 		}
 	};
 
-	settings = defaultSettings; 
-	enabledUrls = defaultEnabledUrls;
-	save("settings",settings);
-	save("enabledUrls",enabledUrls);
+	//settings = defaultSettings; 
+	//enabledUrls = defaultEnabledUrls;
+	save("settings",defaultSettings);
+	save("enabledUrls",defaultEnabledUrls);
 }
 
 
@@ -55,7 +63,7 @@ function isUrlEnabled(url) {
 	return getEnabledUrlKey(url) !== null;
 }
 function getEnabledUrl(key) {
-	return enabledUrls[key];
+	return globals.enabledUrls[key];
 }
 
 
@@ -67,13 +75,13 @@ function getEnabledUrlKey(url) {
 
 	var key;
 
-	for (key in enabledUrls) {
-		if (enabledUrls.hasOwnProperty(key)) {
+	for (key in globals.enabledUrls) {
+		if (globals.enabledUrls.hasOwnProperty(key)) {
 			//So that users can use * instead of .*
 			var regexstr = "^" + key.replace(/\*/g, ".*") + "$";
 			var regexp = new RegExp(regexstr);
 
-			//console.log(url.match(regexp));
+			console.log(regexstr,url.match(regexp));
 
 			if (url.match(regexp)) {
 				return key;
@@ -96,8 +104,8 @@ function incrementCounter(url) {
 
 //Persist state
 function saveState() {
-	localStorage.setItem("enabledUrls",JSON.stringify(enabledUrls));
-	localStorage.setItem("settings",JSON.stringify(settings));
+	localStorage.setItem("enabledUrls",JSON.stringify(globals.enabledUrls));
+	localStorage.setItem("settings",JSON.stringify(globals.settings));
 }
 
 function updateEnabledUrlState(key) {
@@ -113,7 +121,7 @@ function updateEnabledUrlState(key) {
 			|| c.month	!== enabledUrlObj.dateVisited.month
 			|| c.year		!== enabledUrlObj.dateVisited.year) {
 
-		console.log("New day");
+		console.log("New day: resetting...");
 
 		//Restart for today
 		enabledUrlObj.numVisits = 1;
@@ -121,7 +129,8 @@ function updateEnabledUrlState(key) {
 
 	//Same date
 	//Increment if we haven't recently visited the site
-	} else if (c.now - enabledUrlObj.dateVisited.now >= settings.timeGap) {
+	} else if (c.now - enabledUrlObj.dateVisited.now >= globals.settings.timeGap) {
+		console.log("Incrementing numVisits");
 		enabledUrlObj.numVisits++;
 	} 
 
@@ -147,7 +156,7 @@ chrome.extension.onMessage.addListener(
 					var key = getEnabledUrlKey(url);
 					updateEnabledUrlState(key);
 					sendResponse( {
-							"settings" : settings,
+							"settings" : globals.settings,
 							"numVisits" : getEnabledUrl(key).numVisits
 					});
 					break;
@@ -156,7 +165,7 @@ chrome.extension.onMessage.addListener(
 					break; 
 
 				case "getSettings":
-					sendResponse(settings);
+					sendResponse(globals.settings);
 					break;
 				
 				default:

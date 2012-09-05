@@ -1,7 +1,10 @@
 ﻿
-var load = chrome.extension.getBackgroundPage().load;
-var save = chrome.extension.getBackgroundPage().save;
-var CurrentDate = chrome.extension.getBackgroundPage().CurrentDate;
+var bg = chrome.extension.getBackgroundPage();
+var globals = bg.globals;
+var load = bg.load;
+var save = bg.save;
+var CurrentDate = bg.CurrentDate;
+
 
 
 
@@ -34,13 +37,13 @@ function saveSettings() {
 function loadEnabledUrls() {
 	
 	var urlList = getElem('url-list')
-		, enabledUrls = load('enabledUrls')
+		//, enabledUrls = load('enabledUrls')
 		, key
 		, a = [];
 
 
-	for (key in enabledUrls) {
-		if (enabledUrls.hasOwnProperty(key)) {
+	for (key in globals.enabledUrls) {
+		if (globals.enabledUrls.hasOwnProperty(key)) {
 			a.push(key);
 		}
 	}
@@ -50,16 +53,16 @@ function loadEnabledUrls() {
 function saveEnabledUrls() {
 	var urlList = getElem('url-list')
 		, urlStrings = urlList.value.trim().split(/\s+/)
-		, enabledUrls = load('enabledUrls')
+		//, enabledUrls = load('enabledUrls')
 		, newEnabledUrls = {};
 
-	console.log(urlStrings);
+	//console.log(urlStrings);
 
 	//Copy everything over to new object and ignore the rest
 	urlStrings.forEach(function(str) {
 
-		if (enabledUrls[str]) {
-			newEnabledUrls[str] = enabledUrls[str];
+		if (globals.enabledUrls[str]) {
+			newEnabledUrls[str] = globals.enabledUrls[str];
 		}
 		else {
 			var curDate = new CurrentDate();

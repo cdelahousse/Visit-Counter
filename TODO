@@ -1,3 +1,6 @@
 ﻿
 
-Saving settings
+Fix 'clear data'
+modify 'saveState()'. Should abstract away stuff
+remove jQuery
+add On doucment loaded call to content_script

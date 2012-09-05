@@ -63,7 +63,6 @@ $(document).ready(function () {
 
 		var settings = response.settings
 			, numVisits = response.numVisits;
-		console.log(numVisits);
 
 			var div = buildUI(numVisits);
 
@@ -101,10 +100,10 @@ $(document).ready(function () {
 
 	(function() {
 		var sndMsg = chrome.extension.sendMessage;
-		//Run if enabled
+		//Check if this script is enabled for this site
 		sndMsg({msg : "isEnabled"},function (response) {
-			console.log(response ,"Enabled!");
 			if (response) {
+				console.log("Visit Counter is enabled on this site");
 				sndMsg({msg : "updateEnabledUrlState"}, init);
 			}
 			else { return; }
