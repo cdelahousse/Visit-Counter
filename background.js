@@ -74,10 +74,13 @@ function getEnabledUrlKey(url) {
 
 	for (key in globals.enabledUrls) {
 		if (globals.enabledUrls.hasOwnProperty(key)) {
+			//So that dots are literal dots
+			var regexstr = key.replace(/\./g, "\\\.");
 			//So that users can use * instead of .*
-			var regexstr = "^" + key.replace(/\*/g, ".*") + "$";
+			regexstr = "^" +regexstr.replace(/\*/g, ".*") + "$";
 			var regexp = new RegExp(regexstr);
 
+			console.log(regexstr);
 			console.log(regexstr,url.match(regexp));
 
 			if (url.match(regexp)) {
@@ -163,10 +166,13 @@ chrome.extension.onMessage.addListener(
 				case "getSettings":
 					sendResponse(globals.settings);
 					break;
+
+				case "clear":
+					break;
 				
 				default:
 					sendResponse(null);
 			}
 			
-	});
+});
 
