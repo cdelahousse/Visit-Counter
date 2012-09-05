@@ -103,9 +103,13 @@ function incrementCounter(url) {
 
 
 //Persist state
-function saveState() {
-	localStorage.setItem("enabledUrls",JSON.stringify(globals.enabledUrls));
-	localStorage.setItem("settings",JSON.stringify(globals.settings));
+function saveAllState() {
+	for (var key in globals) {
+		if (globals.hasOwnProperty(key)) {
+			save(key,globals[key]);
+		}
+
+	}
 }
 
 function updateEnabledUrlState(key) {
@@ -135,7 +139,7 @@ function updateEnabledUrlState(key) {
 
 	currentEnabledUrl.dateVisited = c;
 
-	saveState();
+	saveAllState();
 
 }
 
