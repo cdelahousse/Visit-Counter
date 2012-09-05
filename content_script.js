@@ -3,12 +3,10 @@
 var sndMsg = chrome.extension.sendMessage;
 
 function buildUI(numVisits) {
-	var frag = document.createDocumentFragment()
-	,   div = document.createElement('div')
+	var div = document.createElement('div')
 	,   span = document.createElement('span')
 	,   str = "Visit #" + numVisits;
 
-	frag.appendChild(div);
 
 	div.id = "visit-counter";
 	div.style.position = "fixed";
@@ -33,21 +31,21 @@ function buildUI(numVisits) {
 	nav.style.right= "2px";
 
 	var clearButton = document.createElement('a');
-	clearButton.href = "#clear";
+	clearButton.href = "#";
 	clearButton.innerHTML = "Clear ";
 	clearButton.id = "clear";
 	nav.appendChild(clearButton);
 
 
 	var exitButton = document.createElement('a');
-	exitButton.href = '#exit';
+	exitButton.href = '#';
 	exitButton.innerHTML = "[X]";
 	exitButton.id = "exit";
 	nav.appendChild(exitButton);
 
 	div.appendChild(nav);
 	
-	return frag;
+	return div;
 
 }
 
@@ -62,36 +60,36 @@ function init(response) {
 
 		var div = buildUI(numVisits);
 
-		//Delegate events
-		$(div).on("click", "a", eventDelegation);
 
-
+		var fadeTimeOutId;
 		$(document).ready(function () {
 		//document.addEventListener("DOMContentLoaded",function() {
 		//Figure out why addEventListener("domasdfasdf") doesn't work on google
 			document.body.appendChild(div);
 
-			var fadeTimeOutId = setTimeout(function() {
+			//Delegate events
+			$(div).on("click", "a", eventDelegation);
+
+			fadeTimeOutId = setTimeout(function() {
 				$(div).fadeOut("slow");
 			}, settings.fadeOutTime );
 
 		});
 
-
-
-		
-
+		function exit() {
+			removeElem(div);
+			clearTimeout(fadeTimeOutId);
+		}
 		function eventDelegation(e) {
 
 			switch (e.target.id) {
 
 				case 'clear':
-
-					chrome.storage.local.clear();
+					console.log("Clearing");
+					sndMsg({msg : "clear"},exit );
 					break;
 				case 'exit':
-					removeElem(div,settings.fadeTimeOutId);
-					clearTimeout(fadeTimeOutId);
+					exit();
 					break;
 				default:
 					break;

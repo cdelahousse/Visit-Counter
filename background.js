@@ -9,7 +9,7 @@ function load(key) {
 	globals[key] = JSON.parse(localStorage.getItem(key));
 }
 
-//Save to local storage
+//Save to local storage and globals
 //Has side effects
 function save(key,obj) {
 	console.log('Saving to localStorage and globals["' + key + '"]');
@@ -129,6 +129,10 @@ function updateEnabledUrlState(key) {
 
 }
 
+function resetEnabledUrl(key) {
+	globals.enabledUrls[key] = new EnabledUrlObj(key,false);
+	save("enabledUrls",globals.enabledUrls);
+}
 
 //Message passing
 chrome.extension.onMessage.addListener(
@@ -158,6 +162,8 @@ chrome.extension.onMessage.addListener(
 					break;
 
 				case "clear":
+					var key = getEnabledUrlKey(url)
+					resetEnabledUrl(key);
 					break;
 				
 				default:
