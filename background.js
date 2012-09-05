@@ -14,6 +14,7 @@ function load(key) {
 //Save to local storage
 //Has side effects
 function save(key,obj) {
+	console.log('Saving to localStorage and globals["' + key + '"]');
 	localStorage.setItem(key,JSON.stringify(obj));
 	globals[key] = obj;
 }
@@ -35,8 +36,6 @@ if (localStorage.length > 0) {
 	load("settings");
 	load("enabledUrls");
 
-	//settings = load("settings");
-	//enabledUrls = load("enabledUrls");
 } else {
 
 	console.log("Setting to defaults");
@@ -52,8 +51,6 @@ if (localStorage.length > 0) {
 		}
 	};
 
-	//settings = defaultSettings; 
-	//enabledUrls = defaultEnabledUrls;
 	save("settings",defaultSettings);
 	save("enabledUrls",defaultEnabledUrls);
 }
@@ -172,5 +169,4 @@ chrome.extension.onMessage.addListener(
 			}
 			
 	});
-
 
