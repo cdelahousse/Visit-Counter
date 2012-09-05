@@ -21,10 +21,10 @@ function save(key,obj) {
 function CurrentDate() {
 	var date = new Date();
 	return {
-		day : date.getDate(),
-			month : date.getMonth(),
-			year : date.getFullYear(),
-			now: Date.now()
+			day : date.getDate()
+		, month : date.getMonth()
+		,	year : date.getFullYear()
+		,	now: Date.now()
 	};
 }
 
@@ -109,32 +109,31 @@ function saveState() {
 }
 
 function updateEnabledUrlState(key) {
-	var enabledUrlObj = getEnabledUrl(key);
+	var currentEnabledUrl = getEnabledUrl(key);
 
 	var c = new CurrentDate() ;
 
-	console.log(c, enabledUrlObj.dateVisited.day);
 	//Check if new day
-	if (	// enabledUrlObj.numVisits === undefined 
-			//|| enabledUrlObj.dateVisited === undefined
-			 c.day		!== enabledUrlObj.dateVisited.day
-			|| c.month	!== enabledUrlObj.dateVisited.month
-			|| c.year		!== enabledUrlObj.dateVisited.year) {
+	if (	// currentEnabledUrl.numVisits === undefined 
+			//|| currentEnabledUrl.dateVisited === undefined
+			 c.day		!== currentEnabledUrl.dateVisited.day
+			|| c.month	!== currentEnabledUrl.dateVisited.month
+			|| c.year		!== currentEnabledUrl.dateVisited.year) {
 
 		console.log("New day: resetting...");
 
 		//Restart for today
-		enabledUrlObj.numVisits = 1;
+		currentEnabledUrl.numVisits = 1;
 
 
 	//Same date
 	//Increment if we haven't recently visited the site
-	} else if (c.now - enabledUrlObj.dateVisited.now >= globals.settings.timeGap) {
-		console.log("Incrementing numVisits");
-		enabledUrlObj.numVisits++;
+	} else if (c.now - currentEnabledUrl.dateVisited.now >= globals.settings.timeGap) {
+		currentEnabledUrl.numVisits++;
+		console.log("Incrementing numVisits: ", currentEnabledUrl.numVisits);
 	} 
 
-	enabledUrlObj.dateVisited = c;
+	currentEnabledUrl.dateVisited = c;
 
 	saveState();
 
@@ -175,47 +174,3 @@ chrome.extension.onMessage.addListener(
 	});
 
 
-
-
-//chrome.storage.local.get(function (r) {
-	//var c = new CurrentDate() ;
-
-////console.log(r);
-////console.log(r.visits === undefined ); 
-////console.log(	r.date === undefined );
-////console.log(		c.day		!== parseInt(r.date.day,10));
-////console.log(		c.month	!== parseInt(r.date.month,10) );
-////console.log(		c.year		!== parseInt(r.date.year,10) );
-
-
-////Check if new day
-//if (r.visits === undefined 
-	//|| r.date === undefined
-	//|| c.day		!== r.date.day
-	//|| c.month	!== r.date.month
-	//|| c.year		!== r.date.year ) {
-
-	//console.log("New day");
-
-	////Restart for today
-	//r.numVisits = 0;
-
-	////Ignore if we've recently visited the site
-//} else if (c.now - r.date.now < settings.timeGap) {
-	//chrome.storage.local.set({
-		//"numVisits" : r.numVisits,
-		//"date" : c.date
-	//});
-	//return;
-//} 
-
-//var numVisits = r.visits;
-//numVisits++;
-
-
-//chrome.storage.local.set({
-	//"visits" : numVisits,
-	//"date" : c
-//});
-
-//});

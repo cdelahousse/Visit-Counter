@@ -1,9 +1,9 @@
 ﻿
-var bg = chrome.extension.getBackgroundPage();
-var globals = bg.globals;
-var load = bg.load;
-var save = bg.save;
-var CurrentDate = bg.CurrentDate;
+var bg = chrome.extension.getBackgroundPage()
+	, globals = bg.globals
+	, load = bg.load
+	, save = bg.save
+	, CurrentDate = bg.CurrentDate;
 
 
 
@@ -37,7 +37,6 @@ function saveSettings() {
 function loadEnabledUrls() {
 	
 	var urlList = getElem('url-list')
-		//, enabledUrls = load('enabledUrls')
 		, key
 		, a = [];
 
@@ -53,10 +52,8 @@ function loadEnabledUrls() {
 function saveEnabledUrls() {
 	var urlList = getElem('url-list')
 		, urlStrings = urlList.value.trim().split(/\s+/)
-		//, enabledUrls = load('enabledUrls')
 		, newEnabledUrls = {};
 
-	//console.log(urlStrings);
 
 	//Copy everything over to new object and ignore the rest
 	urlStrings.forEach(function(str) {
