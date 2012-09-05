@@ -18,8 +18,27 @@ function save(key,obj) {
 	localStorage.setItem(key,JSON.stringify(obj));
 	globals[key] = obj;
 }
+//Persist state
+function saveAllState() {
+	var key;
+	for (key in globals) {
+		if (globals.hasOwnProperty(key)) {
+			save(key,globals[key]);
+		}
+	}
+}
 
-function CurrentDate(d) {
+//Load all state 
+function loadAllState() {
+	var key;
+	for (key in localStorage) {
+		if (localStorage.hasOwnProperty(key)) {
+			load(key);
+		}
+	}
+}
+
+function DateObj(d) {
 	var date = d || new Date();
 	return {
 			day : date.getDate()
@@ -33,8 +52,7 @@ function CurrentDate(d) {
 if (localStorage.length > 0) {
 	console.log("Loading from localStorage");
 	
-	load("settings");
-	load("enabledUrls");
+	loadAllState();
 
 } else {
 
@@ -47,12 +65,11 @@ if (localStorage.length > 0) {
 	var defaultEnabledUrls = {
 		"http*://*.facebook.com/*" : {
 			numVisits : 0,
-			dateVisited : new CurrentDate()
+			dateVisited : new DateObj(new Date(0))
 		}
 	};
 
-	save("settings",defaultSettings);
-	save("enabledUrls",defaultEnabledUrls);
+	saveAllState();
 }
 
 
@@ -102,20 +119,11 @@ function incrementCounter(url) {
 }
 
 
-//Persist state
-function saveAllState() {
-	for (var key in globals) {
-		if (globals.hasOwnProperty(key)) {
-			save(key,globals[key]);
-		}
-
-	}
-}
 
 function updateEnabledUrlState(key) {
 	var currentEnabledUrl = getEnabledUrl(key);
 
-	var c = new CurrentDate() ;
+	var c = new DateObj() ;
 
 	//Check if new day
 	if (	// currentEnabledUrl.numVisits === undefined 
