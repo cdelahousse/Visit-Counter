@@ -1,11 +1,16 @@
 {
   "name": "Visit Counter",
-  "version": "1.0",
+  "version": "1.0.1",
   "manifest_version": 2,
-  "description": "Counts the number of times you've visited that a website throughout the day",
+  "description": "Counts the number of times you've visited a website throughout the day",
+  "icons": { 
+           "48": "icon48x48.png",
+          "128": "icon128x128.png"
+          },
+
   "options_page": "options.html",
   "permissions" :  [
-		"storage", //May remove, use localStorage instead, doesn't seem to need permissiosn
+		"storage", 
 		"<all_urls>"
 	],
   "background": {
