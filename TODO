@@ -1,7 +1,6 @@
 ﻿
 
-Fix 'clear data'
 convert background page to event page
 remove jQuery
-add On doucment loaded call to content_script
+add On doucment loaded call to content_script (fix bug on google.com about ONDATALOADDED event)
 slide In on document load (UI)
